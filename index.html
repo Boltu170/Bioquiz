@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuroscience Fundamentals Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    :root {
+        --tan: #D2B48C;
+        --dark-tan: #C19A6B;
+        --black: #1a1a1a;
+        --hover: #B8956A;
+        --correct: #4A7C59;
+        --incorrect: #8B4049;
+        --border: #8B7355;
+    }
+
+    body {
+        font-family: 'Crimson Text', serif;
+        background-color: var(--tan);
+        color: var(--black);
+        line-height: 1.6;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: var(--tan);
+        padding: 40px;
+        border: 3px solid var(--border);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+        font-family: 'EB Garamond', serif;
+        font-size: 2.8rem;
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--black);
+        padding-bottom: 15px;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-style: italic;
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+        color: var(--black);
+        opacity: 0.8;
+    }
+
+    .progress-container {
+        margin-bottom: 30px;
+        padding: 15px;
+        background-color: var(--dark-tan);
+        border: 2px solid var(--border);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        background-color: var(--tan);
+        border: 1px solid var(--black);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background-color: var(--black);
+        transition: width 0.3s ease;
+    }
+
+    .progress-text {
+        text-align: center;
+        margin-top: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .question-container {
+        margin-bottom: 30px;
+        padding: 25px;
+        border: 2px solid var(--border);
+        background-color: var(--dark-tan);
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question-container.active {
+        display: block;
+    }
+
+    .question-number {
+        font-family: 'EB Garamond', serif;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: var(--black);
+    }
+
+    .question-text {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        font-weight: 600;
+        line-height: 1.8;
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .option {
+        padding: 15px 20px;
+        background-color: var(--tan);
+        border: 2px solid var(--black);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 1.1rem;
+        position: relative;
+    }
+
+    .option:hover:not(.selected):not(.disabled) {
+        background-color: var(--hover);
+        transform: translateX(5px);
+    }
+
+    .option.selected {
+        background-color: var(--black);
+        color: var(--tan);
+        font-weight: 600;
+    }
+
+    .option.disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        font-family: 'Crimson Text', serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background-color: var(--black);
+        color: var(--tan);
+        border: 2px solid var(--black);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn:hover:not(:disabled) {
+        background-color: var(--tan);
+        color: var(--black);
+        transform: scale(1.05);
+    }
+
+    .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .results-container {
+        display: none;
+        padding: 30px;
+        border: 3px solid var(--border);
+        background-color: var(--dark-tan);
+    }
+
+    .results-container.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .results-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .score-display {
+        font-family: 'EB Garamond', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 20px 0;
+    }
+
+    .score-message {
+        font-size: 1.3rem;
+        font-style: italic;
+        margin-bottom: 30px;
+    }
+
+    .review-item {
+        margin-bottom: 25px;
+        padding: 20px;
+        border: 2px solid var(--border);
+        background-color: var(--tan);
+    }
+
+    .review-item.correct {
+        border-left: 5px solid var(--correct);
+    }
+
+    .review-item.incorrect {
+        border-left: 5px solid var(--incorrect);
+    }
+
+    .review-question {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .review-answer {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: var(--dark-tan);
+    }
+
+    .review-answer.user {
+        border-left: 3px solid var(--incorrect);
+    }
+
+    .review-answer.correct {
+        border-left: 3px solid var(--correct);
+    }
+
+    .explanation {
+        margin-top: 15px;
+        padding: 15px;
+        background-color: var(--dark-tan);
+        font-style: italic;
+        border-top: 2px solid var(--border);
+    }
+
+    .explanation-label {
+        font-weight: 700;
+        font-style: normal;
+        margin-bottom: 5px;
+    }
+
+    .start-screen {
+        text-align: center;
+        padding: 40px;
+    }
+
+    .start-screen h2 {
+        font-family: 'EB Garamond', serif;
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .start-screen p {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        line-height: 1.8;
+    }
+
+    .start-btn {
+        margin-top: 30px;
+        padding: 15px 50px;
+        font-size: 1.3rem;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+        }
+        
+        .option {
+            font-size: 1rem;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <h1>Neuroscience Fundamentals</h1>
+        <div class="subtitle">Central & Peripheral Nervous System • Neurons & Synapses</div>
+
+```
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen">
+        <h2>Welcome to the Quiz</h2>
+        <p>This assessment covers key concepts from your lectures on:</p>
+        <p><strong>• Neurons and Synapses</strong></p>
+        <p><strong>• Central and Peripheral Nervous Systems</strong></p>
+        <p>You will answer 20 multiple-choice questions.</p>
+        <p>Take your time and read each question carefully.</p>
+        <button class="btn start-btn" onclick="startQuiz()">Begin Quiz</button>
+    </div>
+
+    <!-- Quiz Section -->
+    <div id="quizSection" style="display: none;">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Question 1 of 20</div>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <div class="navigation">
+            <button class="btn" id="prevBtn" onclick="previousQuestion()" disabled>← Previous</button>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+            <button class="btn" id="submitBtn" onclick="submitQuiz()" style="display: none;">Submit Quiz</button>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="results-container">
+        <div class="results-header">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="scoreDisplay"></div>
+            <div class="score-message" id="scoreMessage"></div>
+        </div>
+        <h3 style="margin-bottom: 20px; font-family: 'EB Garamond', serif;">Review Your Answers:</h3>
+        <div id="reviewContainer"></div>
+        <button class="btn" onclick="restartQuiz()" style="margin-top: 30px;">Retake Quiz</button>
+    </div>
+</div>
+
+<script>
+    // FULL QUESTION BANK - 40 questions total, quiz randomly selects 20
+    const questionBank = [
+        {
+            question: "What is the primary function of neurones in the nervous system?",
+            options: [
+                "To transmit information to nerve cells, muscles, or glands",
+                "To provide structural support to brain tissue",
+                "To produce cerebrospinal fluid in ventricles",
+                "To filter blood entering the brain tissue"
+            ],
+            correct: 0,
+            explanation: "Neurones are specialized cells that transmit information as electrical impulses to other nerve cells, muscles, or glands throughout the body."
+        },
+        {
+            question: "What is the function of the myelin sheath?",
+            options: [
+                "To provide nutrients to the neuron",
+                "To produce neurotransmitters in vesicles",
+                "To connect neurons directly together",
+                "To allow rapid transmission of electrical impulses"
+            ],
+            correct: 3,
+            explanation: "The myelin sheath is an insulating layer made of protein and fatty substances that allows electrical impulses to transmit quickly and efficiently along nerve cells."
+        },
+        {
+            question: "Which type of neurone transmits nerve impulses FROM the CNS TO effectors?",
+            options: [
+                "Motor neurones carry signals to effectors",
+                "Sensory neurones carry signals from receptors",
+                "Relay neurones connect within the CNS",
+                "Bipolar neurones found in special senses"
+            ],
+            correct: 0,
+            explanation: "Motor neurones (also called efferent neurones) carry nerve impulses away from the CNS to effectors such as muscles and glands."
+        },
+        {
+            question: "Where is the cell body located in a sensory neurone?",
+            options: [
+                "At the axon terminal near effectors",
+                "In the middle of the neurone",
+                "In the PNS outside the CNS",
+                "In the CNS with motor neurones"
+            ],
+            correct: 2,
+            explanation: "Sensory neurones have their cell body in the PNS (peripheral nervous system), while motor neurones have their cell body in the CNS (central nervous system)."
+        },
+        {
+            question: "What is a reflex arc?",
+            options: [
+                "The curved shape of the spinal cord",
+                "A pathway that processes signals in the spine",
+                "The arc made by dendrites and axons",
+                "A protective covering around nerve bundles"
+            ],
+            correct: 1,
+            explanation: "A reflex arc is a neural pathway that allows the body to respond to stimuli very quickly, processing the impulse at the spinal cord level before the signal reaches the brain."
+        },
+        {
+            question: "During an action potential, what happens at the depolarisation stage?",
+            options: [
+                "Sodium channels open and Na+ enters the cell",
+                "Potassium channels open and K+ leaves the cell",
+                "The membrane potential reaches resting state",
+                "The neuron returns to negative potential"
+            ],
+            correct: 0,
+            explanation: "During depolarisation, voltage-gated sodium (Na+) channels open, allowing sodium ions to flood into the neurone, making the inside more positive and reaching an action potential of +40mV."
+        },
+        {
+            question: "What is the threshold potential that triggers an action potential?",
+            options: [
+                "-70mV is the resting potential value",
+                "-55mV is the threshold potential value",
+                "+40mV is the action potential peak",
+                "0mV is the neutral membrane state"
+            ],
+            correct: 1,
+            explanation: "The threshold potential is -55mV. When the membrane reaches this voltage, it triggers the opening of many voltage-gated sodium channels, leading to a full action potential."
+        },
+        {
+            question: "What is the refractory period?",
+            options: [
+                "The recovery time when channels cannot fire again",
+                "The time when the neuron is at rest",
+                "The time for impulse to cross synapse",
+                "The period of maximum sodium influx"
+            ],
+            correct: 0,
+            explanation: "The refractory period is when ion channels are recovering after an action potential. Na+ channels are closed during repolarisation, and K+ channels are closed during hyperpolarisation, preventing another immediate action potential."
+        },
+        {
+            question: "At a chemical synapse, what triggers the release of neurotransmitters?",
+            options: [
+                "Sodium ions entering the presynaptic terminal",
+                "Potassium ions leaving the presynaptic cell",
+                "ATP production in mitochondria increases",
+                "Calcium ions entering the presynaptic terminal"
+            ],
+            correct: 3,
+            explanation: "When an action potential reaches the axon terminal, voltage-gated calcium (Ca2+) channels open. Calcium ions entering the cell trigger exocytosis of vesicles containing neurotransmitters."
+        },
+        {
+            question: "What happens after neurotransmitters bind to receptors on the postsynaptic membrane?",
+            options: [
+                "They are immediately broken down completely",
+                "The synapse becomes permanently activated",
+                "Myelin is produced around the neurone",
+                "Ion channels open, leading to depolarisation"
+            ],
+            correct: 3,
+            explanation: "When neurotransmitters bind to receptors on the postsynaptic membrane, they cause ion channels to open (typically allowing sodium in), which leads to depolarisation of the postsynaptic neurone."
+        },
+        {
+            question: "What is the neurotransmitter used at ALL neuromuscular junctions?",
+            options: [
+                "Acetylcholine is used at all junctions",
+                "Dopamine is used in motor pathways",
+                "Serotonin is used in muscle control",
+                "Noradrenaline is used for contraction"
+            ],
+            correct: 0,
+            explanation: "Acetylcholine (ACh) is the neurotransmitter used at all neuromuscular junctions, where motor neurons connect to muscle cells to trigger muscle contraction."
+        },
+        {
+            question: "How does the enzyme acetylcholinesterase function at the synapse?",
+            options: [
+                "It produces more acetylcholine molecules",
+                "It opens ion channels in membranes",
+                "It creates the myelin sheath layer",
+                "It breaks down acetylcholine for recycling"
+            ],
+            correct: 3,
+            explanation: "Acetylcholinesterase breaks down acetylcholine in the synaptic cleft after it has transmitted the signal. The components are then recycled back to the presynaptic cell."
+        },
+        {
+            question: "The Central Nervous System (CNS) consists of:",
+            options: [
+                "The brain and spinal cord only",
+                "All nerves throughout the entire body",
+                "Only the cerebral cortex tissue",
+                "Sensory organs and motor neurones"
+            ],
+            correct: 0,
+            explanation: "The CNS is composed of the brain and spinal cord, which process and interpret information and coordinate responses throughout the body."
+        },
+        {
+            question: "Which division of the peripheral nervous system controls VOLUNTARY movement?",
+            options: [
+                "Autonomic nervous system controls organs",
+                "Sympathetic nervous system activates responses",
+                "Parasympathetic nervous system slows activity",
+                "Somatic nervous system controls skeletal muscles"
+            ],
+            correct: 3,
+            explanation: "The somatic nervous system (part of the PNS) controls voluntary movements by innervating skeletal muscles. It consists of both sensory and motor neurons."
+        },
+        {
+            question: "What is the main function of the autonomic nervous system?",
+            options: [
+                "Regulate involuntary functions throughout the body",
+                "Control conscious voluntary muscle movements",
+                "Process visual information from the eyes",
+                "Coordinate balance and posture control"
+            ],
+            correct: 0,
+            explanation: "The autonomic nervous system regulates involuntary functions including heart rate, blood pressure, breathing, digestion, and glandular secretions."
+        },
+        {
+            question: "The sympathetic nervous system is responsible for:",
+            options: [
+                "Fight or flight responses mobilizing the body",
+                "Rest and digest responses calming activity",
+                "Slowing heart rate and stimulating digestion",
+                "Maintaining consciousness and awareness levels"
+            ],
+            correct: 0,
+            explanation: "The sympathetic nervous system activates the 'fight or flight' response, increasing heart rate, dilating pupils, inhibiting digestion, and mobilizing energy for action."
+        },
+        {
+            question: "Which lobe of the cerebral cortex is primarily responsible for VISION?",
+            options: [
+                "Frontal lobe controls executive functions",
+                "Temporal lobe processes memory and hearing",
+                "Parietal lobe handles sensory processing",
+                "Occipital lobe processes visual information"
+            ],
+            correct: 3,
+            explanation: "The occipital lobe, located at the back of the brain, is the primary visual processing center of the cerebral cortex."
+        },
+        {
+            question: "What is the primary function of the cerebellum?",
+            options: [
+                "Coordinating motor movements, balance, and posture",
+                "Processing emotions and memory formation",
+                "Regulating body temperature and hunger",
+                "Processing language and speech production"
+            ],
+            correct: 0,
+            explanation: "The cerebellum coordinates planning, timing, and patterning of skeletal muscle activity, controls posture and balance, and coordinates head and eye movements."
+        },
+        {
+            question: "The hypothalamus is responsible for:",
+            options: [
+                "Coordinating voluntary muscle movements",
+                "Processing sensory information from skin",
+                "Storing long-term memories in networks",
+                "Regulating homeostasis and controlling hormones"
+            ],
+            correct: 3,
+            explanation: "The hypothalamus regulates the autonomic nervous system, controls hormone secretion by the pituitary gland, and is the central regulator of homeostasis in the body."
+        },
+        {
+            question: "What is the function of cerebrospinal fluid (CSF)?",
+            options: [
+                "To produce myelin for nerve cells",
+                "To transmit nerve impulses faster",
+                "To create the blood-brain barrier",
+                "To cushion, nourish, and remove waste"
+            ],
+            correct: 3,
+            explanation: "CSF cushions and protects the brain, provides nutrients (glucose, oxygen), removes metabolic waste, and helps maintain stable conditions around the CNS. About 500ml is produced daily."
+        },
+        {
+            question: "Which cells produce the myelin sheath in the peripheral nervous system?",
+            options: [
+                "Schwann cells wrap around axons",
+                "Astrocytes provide support structures",
+                "Oligodendrocytes are found in CNS",
+                "Microglia act as immune cells"
+            ],
+            correct: 0,
+            explanation: "Schwann cells wrap around axons in the PNS to form the myelin sheath. Each Schwann cell myelinates one segment of one axon."
+        },
+        {
+            question: "What are the Nodes of Ranvier?",
+            options: [
+                "Gaps in myelin where action potentials jump",
+                "Connections between neurons at synapses",
+                "Receptors on dendrites receiving signals",
+                "Vesicles containing neurotransmitter molecules"
+            ],
+            correct: 0,
+            explanation: "Nodes of Ranvier are gaps in the myelin sheath where the axon membrane is exposed. Action potentials jump from node to node (saltatory conduction), speeding up transmission."
+        },
+        {
+            question: "What is the resting potential of a neurone?",
+            options: [
+                "+40mV is the action potential",
+                "-55mV is the threshold value",
+                "0mV is a neutral state",
+                "-70mV is the resting potential"
+            ],
+            correct: 3,
+            explanation: "The resting potential is approximately -70mV. This is maintained by the sodium-potassium pump and the differential permeability of the membrane to different ions."
+        },
+        {
+            question: "What does hyperpolarisation mean during an action potential?",
+            options: [
+                "The membrane becomes more positive than resting",
+                "The membrane reaches the threshold potential",
+                "The membrane returns to resting potential",
+                "The membrane becomes more negative than resting"
+            ],
+            correct: 3,
+            explanation: "Hyperpolarisation occurs when too many K+ ions leave the cell, making the membrane potential more negative than the resting potential (e.g., -80mV). The sodium-potassium pump then restores resting potential."
+        },
+        {
+            question: "Sensory neurones are also known as:",
+            options: [
+                "Efferent neurones carrying signals away",
+                "Afferent neurones carrying signals toward CNS",
+                "Interneurones connecting within the CNS",
+                "Multipolar neurones with many dendrites"
+            ],
+            correct: 1,
+            explanation: "Sensory neurones are called afferent neurones because they carry information toward the CNS from sensory receptors."
+        },
+        {
+            question: "What happens during repolarisation in an action potential?",
+            options: [
+                "Sodium channels open to allow Na+ influx",
+                "Calcium channels open to release neurotransmitters",
+                "The membrane potential reaches its peak",
+                "Potassium channels open to allow K+ efflux"
+            ],
+            correct: 3,
+            explanation: "During repolarisation, voltage-gated potassium channels open and K+ ions leave the cell, bringing the membrane potential back toward negative values."
+        },
+        {
+            question: "What is the synaptic cleft?",
+            options: [
+                "The space between presynaptic and postsynaptic membranes",
+                "The vesicle containing neurotransmitter molecules",
+                "The receptor site on the postsynaptic membrane",
+                "The gap in myelin sheath along the axon"
+            ],
+            correct: 0,
+            explanation: "The synaptic cleft is the narrow gap (about 20-40 nanometers) between the presynaptic and postsynaptic membranes where neurotransmitters diffuse across."
+        },
+        {
+            question: "The temporal lobe is primarily responsible for:",
+            options: [
+                "Memory processing and hearing functions",
+                "Executive functions and decision making",
+                "Visual processing and color perception",
+                "Sensory processing and spatial awareness"
+            ],
+            correct: 0,
+            explanation: "The temporal lobe processes auditory information (hearing) and is crucial for memory formation and storage."
+        },
+        {
+            question: "The frontal lobe is responsible for:",
+            options: [
+                "Processing visual information from eyes",
+                "Coordinating balance and movement",
+                "Executive function, planning, and language",
+                "Processing touch and temperature sensations"
+            ],
+            correct: 2,
+            explanation: "The frontal lobe controls executive functions (decision-making, planning, personality), motor control, and language production (Broca's area)."
+        },
+        {
+            question: "What does the parietal lobe process?",
+            options: [
+                "Auditory information and memory",
+                "Visual information and color",
+                "Motor commands for movement",
+                "Sensory information and spatial awareness"
+            ],
+            correct: 3,
+            explanation: "The parietal lobe processes sensory information from the body (touch, temperature, pain) and is involved in spatial awareness and sense of self."
+        },
+        {
+            question: "The parasympathetic nervous system is responsible for:",
+            options: [
+                "Fight or flight responses",
+                "Increasing heart rate and breathing",
+                "Rest, digest, and energy conservation",
+                "Voluntary control of skeletal muscles"
+            ],
+            correct: 2,
+            explanation: "The parasympathetic nervous system promotes 'rest and digest' activities: slowing heart rate, stimulating digestion, constricting pupils, and conserving energy."
+        },
+        {
+            question: "What is the function of the thalamus?",
+            options: [
+                "Regulating hormones and homeostasis",
+                "Processing and relaying sensory information to cortex",
+                "Coordinating fine motor movements",
+                "Controlling breathing and heart rate"
+            ],
+            correct: 1,
+            explanation: "The thalamus processes and distributes almost all sensory and motor information going to the cerebral cortex. It acts as a relay station for the brain."
+        },
+        {
+            question: "The medulla oblongata controls:",
+            options: [
+                "Memory formation and retrieval",
+                "Visual processing and recognition",
+                "Vital autonomic functions like breathing and heart rate",
+                "Coordination of voluntary muscle movements"
+            ],
+            correct: 2,
+            explanation: "The medulla oblongata controls vital autonomic functions including regulation of breathing, heart rate, blood pressure, and reflex actions like coughing and swallowing."
+        },
+        {
+            question: "Where is cerebrospinal fluid (CSF) produced?",
+            options: [
+                "In the blood-brain barrier",
+                "By neurons in the cortex",
+                "In the choroid plexuses of ventricles",
+                "By astrocytes throughout the brain"
+            ],
+            correct: 2,
+            explanation: "CSF is produced in the choroid plexuses, which are specialized structures in the ventricles lined with ependymal cells that filter plasma from capillaries."
+        },
+        {
+            question: "What is the blood-brain barrier?",
+            options: [
+                "Tight junctions between brain capillary endothelial cells",
+                "The skull bone protecting the brain",
+                "The meninges surrounding the brain",
+                "The cerebrospinal fluid cushioning the brain"
+            ],
+            correct: 0,
+            explanation: "The blood-brain barrier consists of tight junctions between endothelial cells of brain capillaries, which are in contact with astrocyte foot processes. It protects the brain from toxins and maintains stable conditions."
+        },
+        {
+            question: "Which structure connects the left and right cerebral hemispheres?",
+            options: [
+                "The corpus callosum",
+                "The thalamus bridge",
+                "The cerebellum peduncles",
+                "The longitudinal fissure"
+            ],
+            correct: 0,
+            explanation: "The corpus callosum is a thick band of nerve fibers that connects the left and right cerebral hemispheres, allowing communication between them."
+        },
+        {
+            question: "What is the primary role of relay (intermediate) neurones?",
+            options: [
+                "Transmit signals from CNS to muscles",
+                "Carry sensory information to the CNS",
+                "Connect sensory and motor neurones within CNS",
+                "Regulate autonomic nervous system functions"
+            ],
+            correct: 2,
+            explanation: "Relay neurones (also called interneurones) are found entirely within the CNS and connect sensory neurones to motor neurones, allowing for processing and integration of signals."
+        },
+        {
+            question: "What is integration in the nervous system?",
+            options: [
+                "The formation of new neural connections",
+                "Summing inputs to decide whether to fire",
+                "The myelination of axons during development",
+                "The recycling of neurotransmitters at synapses"
+            ],
+            correct: 1,
+            explanation: "Integration is the process by which a neuron sums up all excitatory and inhibitory inputs it receives and 'decides' whether to generate an action potential. This occurs at the axon hillock."
+        },
+        {
+            question: "What are the meninges?",
+            options: [
+                "Blood vessels supplying the brain",
+                "Protective membranes surrounding brain and spinal cord",
+                "Ventricles filled with cerebrospinal fluid",
+                "Neurons that control autonomic functions"
+            ],
+            correct: 1,
+            explanation: "The meninges are three protective membrane layers (dura mater, arachnoid mater, pia mater) that surround the brain and spinal cord, providing protection and containing cerebrospinal fluid."
+        },
+        {
+            question: "How does alcohol affect cerebellar function?",
+            options: [
+                "Improves coordination and balance",
+                "Enhances fine motor control",
+                "Impairs motor coordination causing ataxia",
+                "Increases reaction time and reflexes"
+            ],
+            correct: 2,
+            explanation: "Alcohol impairs cerebellar function, leading to loss of precise motor control and ataxia (lack of coordination, staggering gait, difficulty with balance and fine movements)."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let userAnswers = [];
+    let quizStarted = false;
+    let selectedQuestions = []; // Will hold the 20 randomly selected questions
+
+    // Fisher-Yates shuffle algorithm
+    function shuffleArray(array) {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+    }
+
+    // Randomly select 20 questions from the bank and shuffle answer options
+    function selectAndPrepareQuestions() {
+        // Shuffle the question bank and take first 20
+        const shuffled = shuffleArray(questionBank);
+        selectedQuestions = shuffled.slice(0, 20);
+        
+        // For each selected question, shuffle the answer options
+        selectedQuestions = selectedQuestions.map(q => {
+            // Create array of options with their original indices
+            const optionsWithIndices = q.options.map((opt, idx) => ({
+                text: opt,
+                wasCorrect: idx === q.correct
+            }));
+            
+            // Shuffle the options
+            const shuffledOptions = shuffleArray(optionsWithIndices);
+            
+            // Find new position of correct answer
+            const newCorrectIndex = shuffledOptions.findIndex(opt => opt.wasCorrect);
+            
+            return {
+                question: q.question,
+                options: shuffledOptions.map(opt => opt.text),
+                correct: newCorrectIndex,
+                explanation: q.explanation
+            };
+        });
+    }
+
+    function startQuiz() {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('quizSection').style.display = 'block';
+        quizStarted = true;
+        
+        // Select random questions and shuffle their answers
+        selectAndPrepareQuestions();
+        
+        loadQuestions();
+        showQuestion(0);
+    }
+
+    function loadQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = ''; // Clear previous questions
+        
+        selectedQuestions.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-container';
+            questionDiv.id = `question-${index}`;
+            
+            let optionsHTML = '';
+            q.options.forEach((option, optIndex) => {
+                optionsHTML += `
+                    <div class="option" onclick="selectOption(${index}, ${optIndex})">
+                        ${String.fromCharCode(65 + optIndex)}. ${option}
+                    </div>
+                `;
+            });
+
+            questionDiv.innerHTML = `
+                <div class="question-number">Question ${index + 1} of ${selectedQuestions.length}</div>
+                <div class="question-text">${q.question}</div>
+                <div class="options" id="options-${index}">
+                    ${optionsHTML}
+                </div>
+            `;
+            
+            container.appendChild(questionDiv);
+        });
+    }
+
+    function showQuestion(index) {
+        document.querySelectorAll('.question-container').forEach(q => q.classList.remove('active'));
+        document.getElementById(`question-${index}`).classList.add('active');
+        
+        currentQuestion = index;
+        updateProgress();
+        updateNavigationButtons();
+    }
+
+    function selectOption(questionIndex, optionIndex) {
+        const optionsContainer = document.getElementById(`options-${questionIndex}`);
+        const options = optionsContainer.querySelectorAll('.option');
+        
+        options.forEach(opt => opt.classList.remove('selected'));
+        options[optionIndex].classList.add('selected');
+        
+        userAnswers[questionIndex] = optionIndex;
+        updateNavigationButtons();
+    }
+
+    function updateProgress() {
+        const progress = ((currentQuestion + 1) / selectedQuestions.length) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressText').textContent = 
+            `Question ${currentQuestion + 1} of ${selectedQuestions.length}`;
+    }
+
+    function updateNavigationButtons() {
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        prevBtn.disabled = currentQuestion === 0;
+        
+        const isAnswered = userAnswers[currentQuestion] !== undefined;
+        
+        if (currentQuestion === selectedQuestions.length - 1) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = isAnswered ? 'block' : 'none';
+        } else {
+            nextBtn.style.display = 'block';
+            nextBtn.disabled = !isAnswered;
+            submitBtn.style.display = 'none';
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestion < selectedQuestions.length - 1) {
+            showQuestion(currentQuestion + 1);
+        }
+    }
+
+    function previousQuestion() {
+        if (currentQuestion > 0) {
+            showQuestion(currentQuestion - 1);
+        }
+    }
+
+    function submitQuiz() {
+        if (userAnswers.length < selectedQuestions.length) {
+            alert('Please answer all questions before submitting.');
+            return;
+        }
+        
+        document.getElementById('quizSection').style.display = 'none';
+        showResults();
+    }
+
+    function showResults() {
+        const resultsSection = document.getElementById('resultsSection');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const scoreMessage = document.getElementById('scoreMessage');
+        const reviewContainer = document.getElementById('reviewContainer');
+        
+        let correctCount = 0;
+        selectedQuestions.forEach((q, index) => {
+            if (userAnswers[index] === q.correct) {
+                correctCount++;
+            }
+        });
+        
+        const percentage = Math.round((correctCount / selectedQuestions.length) * 100);
+        scoreDisplay.textContent = `${correctCount} / ${selectedQuestions.length} (${percentage}%)`;
+        
+        let message = '';
+        if (percentage >= 80) {
+            message = 'Excellent work! You have a strong understanding of the material.';
+        } else if (percentage >= 60) {
+            message = 'Good effort! Review the explanations below to strengthen your understanding.';
+        } else {
+            message = 'Keep studying! Review your lecture notes and try again.';
+        }
+        scoreMessage.textContent = message;
+        
+        reviewContainer.innerHTML = '';
+        selectedQuestions.forEach((q, index) => {
+            const isCorrect = userAnswers[index] === q.correct;
+            const reviewItem = document.createElement('div');
+            reviewItem.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+            
+            reviewItem.innerHTML = `
+                <div class="review-question">
+                    <strong>Question ${index + 1}:</strong> ${q.question}
+                </div>
+                ${!isCorrect ? `
+                    <div class="review-answer user">
+                        <strong>Your answer:</strong> ${String.fromCharCode(65 + userAnswers[index])}. ${q.options[userAnswers[index]]}
+                    </div>
+                ` : ''}
+                <div class="review-answer correct">
+                    <strong>Correct answer:</strong> ${String.fromCharCode(65 + q.correct)}. ${q.options[q.correct]}
+                </div>
+                <div class="explanation">
+                    <div class="explanation-label">Explanation:</div>
+                    ${q.explanation}
+                </div>
+            `;
+            
+            reviewContainer.appendChild(reviewItem);
+        });
+        
+        resultsSection.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function restartQuiz() {
+        currentQuestion = 0;
+        userAnswers = [];
+        selectedQuestions = [];
+        
+        document.getElementById('resultsSection').classList.remove('active');
+        document.getElementById('quizSection').style.display = 'none';
+        document.getElementById('startScreen').style.display = 'block';
+        
+        window.scrollTo(0, 0);
+    }
+</script>
+```
+
+</body>
+</html>
